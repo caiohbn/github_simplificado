@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini‑palestra: Git básico + Pull Request</title>
+  <style>
+    :root { --bg: #0b1020; --card: #121831; --muted: #93a1c1; --text: #e8ecf3; --accent: #6ea8fe; --ok: #4ade80; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji"; background: linear-gradient(180deg, #0b1020, #0b1428); color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
+    .hero { display: grid; gap: 12px; padding: 36px 20px; border-radius: 18px; background: radial-gradient(1200px 600px at 10% -20%, rgba(110,168,254,.25), transparent), var(--card); box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .hero h1 { margin: 0; font-size: clamp(26px, 3vw, 38px); letter-spacing: .3px; }
+    .hero p { margin: 0; color: var(--muted); }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); margin-top: 24px; }
+    .card { grid-column: span 12; background: #0f1530; border: 1px solid #20294a; border-radius: 16px; padding: 16px; box-shadow: inset 0 1px 0 #1d2544; }
+    @media (min-width: 900px) { .span-6 { grid-column: span 6; } }
+    .card h2, .card h3 { margin: 0 0 8px; font-size: 20px; }
+    .muted { color: var(--muted); }
+    .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; border: 1px solid #26305a; background: #0e1531; color: var(--muted); font-size: 12px; }
+    .steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+    .steps li { position: relative; padding-left: 46px; margin: 14px 0; }
+    .steps li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 2px; width: 28px; height: 28px; line-height: 28px; border-radius: 50%; text-align: center; background: #1a2246; border: 1px solid #293467; color: var(--text); font-weight: 600; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    pre { position: relative; background: #0c122b; border: 1px solid #1a2246; border-radius: 14px; padding: 14px 14px 42px; overflow-x: auto; }
+    pre .copy { position: absolute; right: 10px; bottom: 8px; font-size: 12px; padding: 6px 10px; border-radius: 10px; border: 1px solid #2a356d; background: #11183a; color: var(--text); cursor: pointer; }
+    pre .copied { border-color: #1f8647; color: #c3f7d2; }
+    .kbd { display: inline-block; padding: 2px 6px; border-radius: 6px; border: 1px solid #283362; background: #0b1230; font-family: inherit; font-size: 12px; }
+    .ok { color: var(--ok); }
+    .footer { margin: 32px 0 12px; text-align: center; color: var(--muted); font-size: 14px; }
+    .callout { border-left: 4px solid #2b85ff; background: #0c1432; padding: 12px 14px; border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Git básico + Pull Request</h1>
+      <p>Material de apoio para uma mini‑palestra. Vamos praticar <span class="pill">commit</span>, <span class="pill">checkout</span>, <span class="pill">pull</span>, <span class="pill">push</span> e abrir um <span class="pill">Pull Request</span>.</p>
+      <p class="muted">Objetivo: cada participante fará um PR editando <code>participants.md</code> neste repositório.</p>
+    </header>
+
+    <section class="grid">
+      <article class="card span-6">
+        <h2>1) Conceitos rápidos</h2>
+        <ul>
+          <li><b>commit</b>: salva um “pacote” de alterações no histórico local.</li>
+          <li><b>checkout</b>: muda de branch ou cria uma nova (<code>git checkout -b</code>).</li>
+          <li><b>pull</b>: baixa as alterações do remoto e integra na sua branch atual.</li>
+          <li><b>push</b>: envia seus commits locais para o repositório remoto.</li>
+        </ul>
+      </article>
+
+      <article class="card span-6">
+        <h2>2) Pré‑requisitos</h2>
+        <ul>
+          <li>Conta no GitHub e Git instalado (<span class="kbd">git --version</span>).</li>
+          <li>Editor de texto (VS Code, etc.).</li>
+          <li>Faça <b>fork</b> deste repositório e depois <b>clone</b> o seu fork.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>3) Fluxo da atividade (PR)</h2>
+        <ol class="steps">
+          <li>Crie sua <b>branch</b> de trabalho:
+            <pre><code>git checkout -b feat/seu-nome</code><button class="copy">copiar</button></pre>
+          </li>
+          <li>Edite o arquivo <code>participants.md</code> e adicione uma linha com seu nome e cidade.
+            <div class="callout muted">Se o arquivo não existir, crie um novo na raiz do repositório com o conteúdo do exemplo mais abaixo.</div>
+          </li>
+          <li>Veja o que mudou:
+            <pre><code>git status</code><button class="copy">copiar</button></pre>
+          </li>
+          <li>Adicione e faça <b>commit</b> das alterações:
+            <pre><code>git add participants.md
+git commit -m "chore: adiciona &lt;seu-nome&gt; ao participants.md"</code><button class="copy">copiar</button></pre>
+          </li>
+          <li>Sincronize sua branch com o remoto (se necessário):
+            <pre><code>git pull --rebase origin main</code><button class="copy">copiar</button></pre>
+          </li>
+          <li>Envie sua branch para o seu fork:
+            <pre><code>git push -u origin feat/seu-nome</code><button class="copy">copiar</button></pre>
+          </li>
+          <li>Abra um <b>Pull Request</b> no GitHub do seu fork para o repositório original (base: <code>main</code>).</li>
+        </ol>
+      </article>
+
+      <article class="card span-6">
+        <h2>4) Comandos úteis</h2>
+        <pre><code># configurar usuário (uma vez)
+git config --global user.name "Seu Nome"
+git config --global user.email "voce@exemplo.com"
+
+# ver histórico
+git log --oneline --graph --decorate --all
+
+# alternar de branch
+git checkout main
+
+# atualizar sua cópia local
+git pull origin main
+
+# enviar commits
+git push origin &lt;sua-branch&gt;</code><button class="copy">copiar</button></pre>
+      </article>
+
+      <article class="card span-6">
+        <h2>5) Dicas rápidas</h2>
+        <ul>
+          <li>Commits pequenos e mensagens claras.</li>
+          <li>Uma feature por branch.</li>
+          <li>Antes do <span class="kbd">push</span>, rode <span class="kbd">git pull --rebase</span> para evitar conflitos.</li>
+          <li>Se der conflito, abra o arquivo, resolva, depois <span class="kbd">git add</span> e <span class="kbd">git rebase --continue</span>.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>6) Exemplo de <code>participants.md</code></h2>
+        <p class="muted">Crie um arquivo na raiz chamado <code>participants.md</code> e adicione seu nome como no exemplo:</p>
+        <pre><code># Participants
+
+- Seu Nome – Sua Cidade
+- Ada Lovelace – Londres
+- Grace Hopper – Nova Iorque
+</code><button class="copy">copiar</button></pre>
+        <p class="ok">✅ Dica: use acentos normalmente; o Markdown suporta caracteres UTF‑8.</p>
+      </article>
+
+      <article class="card">
+        <h2>7) Roteiro da mini‑palestra (facilitador)</h2>
+        <ol class="steps">
+          <li>Apresentar o fluxo Git e o objetivo (5 min).</li>
+          <li>Mostrar como fazer <b>fork</b> e <b>clone</b> (5 min).</li>
+          <li>Criar branch com <code>checkout -b</code>, editar <code>participants.md</code>, <b>commit</b>, <b>push</b> e abrir o PR (10–15 min).</li>
+          <li>Encerrar revisando PRs e fazendo merge ao vivo (5 min).</li>
+        </ol>
+      </article>
+
+      <article class="card">
+        <h2>8) Troubleshooting rápido</h2>
+        <details>
+          <summary>"Permission denied" ao dar <code>git push</code></summary>
+          <p>Verifique se o remoto aponta para o <b>seu fork</b> (origin). Use <code>git remote -v</code>. Se estiver errado: <code>git remote set-url origin &lt;url-do-seu-fork&gt;</code>.</p>
+        </details>
+        <details>
+          <summary>Confli tos ao dar <code>pull --rebase</code></summary>
+          <p>Abra os arquivos marcados, resolva os conflitos, rode <code>git add .</code> e em seguida <code>git rebase --continue</code>.</p>
+        </details>
+        <details>
+          <summary>Esqueci de criar branch antes de editar</summary>
+          <p>Crie agora e mova o commit: <code>git checkout -b feat/seu-nome</code> e continue normalmente.</p>
+        </details>
+      </article>
+    </section>
+
+    <p class="footer">Feito com ♥ para aprender Git colaborativamente.</p>
+  </div>
+
+  <script>
+    // Botões de copiar
+    document.querySelectorAll('pre').forEach(pre => {
+      const btn = pre.querySelector('.copy');
+      if (!btn) return;
+      btn.addEventListener('click', async () => {
+        const code = pre.querySelector('code').innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          btn.classList.add('copied');
+          btn.textContent = 'copiado!';
+          setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'copiar'; }, 1500);
+        } catch (e) {
+          btn.textContent = 'erro :(';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
